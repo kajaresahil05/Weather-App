@@ -2,17 +2,87 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     <title>Weather App</title>
+    
+    <!-- PWA Primary Meta Tags -->
+    <meta name="description" content="Live weather forecast Progressive Web App. Real-time temperature, humidity, and atmospheric conditions.">
+    <meta name="theme-color" content="#0284c7">
+    
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Favicon & Icons -->
+    <link rel="icon" type="image/png" href="icons/favicon.png">
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+    
+    <!-- iOS PWA Specific Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Weather">
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="weather.css">
 </head>
 <body>
-    <form class="weatherForm">
-        <input type="text" class="cityInput" placeholder="Enter City">
-        <button type="submit">Get Weather</button>
-    </form>
+    <!-- App Container -->
+    <div class="app-container">
+        <!-- Top Navigation Bar -->
+        <header class="app-header">
+            <div class="brand">
+                <img src="icons/favicon.png" alt="Weather App Icon" class="brand-icon">
+                <span class="brand-title">Weather App</span>
+            </div>
+            <div class="header-actions">
+                <div id="offlineBadge" class="offline-badge hidden">
+                    <span class="offline-dot"></span> Offline
+                </div>
+                <button id="installBtn" class="install-btn hidden" aria-label="Install App" title="Install Weather App on your device">
+                    <svg class="install-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    <span>Install App</span>
+                </button>
+            </div>
+        </header>
 
-    <div class="card" style="display: none;">    
+        <!-- Search Form -->
+        <main class="main-content">
+            <form class="weatherForm" autocomplete="off">
+                <div class="input-group">
+                    <input type="text" class="cityInput" placeholder="Enter city name..." aria-label="Enter city name">
+                    <button type="button" id="geoBtn" class="geo-btn" title="Use current location" aria-label="Use current location">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
+                        </svg>
+                    </button>
+                </div>
+                <button type="submit" class="submitBtn">Get Weather</button>
+            </form>
+
+            <!-- Loading Spinner -->
+            <div id="loader" class="loader-container hidden">
+                <div class="spinner"></div>
+                <p class="loader-text">Fetching weather data...</p>
+            </div>
+
+            <!-- Weather Card -->
+            <div class="card" style="display: none;">
+            </div>
+
+            <!-- iOS Install Guidance Prompt -->
+            <div id="iosPrompt" class="ios-prompt hidden">
+                <p>To install on iOS: Tap <strong>Share</strong> <span class="share-icon">⎙</span> then select <strong>Add to Home Screen</strong> <span class="plus-icon">⊞</span></p>
+                <button id="closeIosPrompt" class="close-ios-btn" aria-label="Close prompt">&times;</button>
+            </div>
+        </main>
     </div>
 
     <script src="weather.js"></script>

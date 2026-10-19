@@ -1,76 +1,510 @@
-body{
-    font-family: Arial, Helvetica, sans-serif;
-    background-color: hsl(0,0%,95%);
+/* Modern Design Tokens */
+:root {
+    --primary: #0284c7;
+    --primary-hover: #0369a1;
+    --primary-light: #e0f2fe;
+    --accent: #f59e0b;
+    --bg-dark: #0f172a;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --card-bg: rgba(255, 255, 255, 0.85);
+    --card-border: rgba(255, 255, 255, 0.6);
+    --card-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.3), 0 0 15px rgba(0, 0, 0, 0.05);
+    --radius-lg: 24px;
+    --radius-md: 14px;
+    --radius-sm: 8px;
+    --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+    box-sizing: border-box;
     margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    min-height: 100vh;
+    min-height: 100dvh;
+    margin: 0;
+    background-color: #0f172a;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+    color: var(--text-main);
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-image: none;
+    transition: background-image 0.6s ease-in-out;
+    position: relative;
+    overflow-x: hidden;
 }
-.weatherForm{
-    margin: 20px;
+
+/* Subtle dark backdrop overlay to ensure legibility over bright weather images */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at center, rgba(15, 23, 42, 0.25) 0%, rgba(15, 23, 42, 0.55) 100%);
+    pointer-events: none;
+    z-index: 0;
 }
-.cityInput{
-    padding: 10px;
-    font-size: 2rem;
-    font-weight: bold;
-    border: 2px solid hsl(0,0%,20%,0.3);
+
+/* App Container */
+.app-container {
+    width: 100%;
+    max-width: 540px;
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    padding: 16px 20px 32px;
+    position: relative;
+    z-index: 1;
+}
+
+/* Header */
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0 20px;
+    width: 100%;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.brand-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.brand-title {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #ffffff;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    letter-spacing: -0.3px;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Offline Badge */
+.offline-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: rgba(239, 68, 68, 0.9);
+    backdrop-filter: blur(8px);
+    color: #ffffff;
+    font-size: 0.8rem;
+    font-weight: 700;
+    border-radius: 20px;
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
+    animation: pulse 2s infinite;
+}
+
+.offline-dot {
+    width: 8px;
+    height: 8px;
+    background: #ffffff;
+    border-radius: 50%;
+}
+
+/* Install Button */
+.install-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 16px;
+    background: linear-gradient(135deg, #0284c7, #2563eb);
+    color: #ffffff;
+    border: none;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+    transition: var(--transition);
+}
+
+.install-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.45);
+}
+
+.install-btn:active {
+    transform: scale(0.97);
+}
+
+.install-icon {
+    width: 16px;
+    height: 16px;
+}
+
+/* Main Content Area */
+.main-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-top: 8px;
+}
+
+/* Weather Search Form */
+.weatherForm {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.input-group {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.cityInput {
+    width: 100%;
+    padding: 14px 48px 14px 18px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    font-family: inherit;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(12px);
+    color: var(--text-main);
+    outline: none;
+    transition: var(--transition);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.cityInput:focus {
+    border-color: #38bdf8;
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.3);
+}
+
+.cityInput::placeholder {
+    color: #94a3b8;
+    font-weight: 500;
+}
+
+/* Current Location Button */
+.geo-btn {
+    position: absolute;
+    right: 8px;
+    width: 36px;
+    height: 36px;
+    background: #f1f5f9;
+    border: none;
     border-radius: 10px;
-    margin: 10px;
-    width: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--primary);
+    transition: var(--transition);
 }
-button[type="submit"]{
-    padding: 10px 20px;
-    font-weight: bold;
-    font-size: 2rem;
-    background-color: hsl(122,39%,50%);
+
+.geo-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+.geo-btn:hover {
+    background: var(--primary-light);
+    transform: scale(1.05);
+}
+
+.geo-btn:active {
+    transform: scale(0.95);
+}
+
+/* Submit Button */
+button[type="submit"],
+.submitBtn {
+    width: 100%;
+    padding: 14px 20px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    font-family: inherit;
+    background: linear-gradient(135deg, #10b981, #059669);
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: var(--radius-md);
     cursor: pointer;
+    box-shadow: 0 6px 18px rgba(16, 185, 129, 0.35);
+    transition: var(--transition);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
-button[type="submit"]:hover{
-    background-color: hsl(122,39%,40%);
+
+button[type="submit"]:hover,
+.submitBtn:hover {
+    background: linear-gradient(135deg, #059669, #047857);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 22px rgba(16, 185, 129, 0.45);
 }
-.card{
-    background: linear-gradient(180deg,hsl(210,100%,75%),hsl(40,100%,75%));
-    padding: 50px;
-    box-shadow: 2px 2px 5px hsl(0,0%,0%,0.5);
-    min-width: 300px;
+
+button[type="submit"]:active,
+.submitBtn:active {
+    transform: scale(0.98);
+}
+
+/* Weather Card */
+.card {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-lg);
+    padding: 32px 24px;
+    box-shadow: var(--card-shadow);
     display: flex;
     flex-direction: column;
     align-items: center;
-    border-radius: 10px;
+    text-align: center;
+    animation: slideUp 0.4s ease-out;
+    margin-bottom: 24px;
 }
-h1{
-    font-size: 3.5rem;
-    margin-top: 0;
-    margin-bottom: 25px;
+
+.cityDisplay {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin-bottom: 6px;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
 }
-p{
+
+.weatherEmoji {
+    font-size: 5.5rem;
+    margin: 8px 0;
+    line-height: 1;
+    filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.15));
+    animation: floatEmoji 3s ease-in-out infinite;
+}
+
+.tempDisplay {
+    font-size: 3.8rem;
+    font-weight: 800;
+    color: #0284c7;
+    margin: 4px 0 8px;
+    letter-spacing: -1.5px;
+    line-height: 1.1;
+}
+
+.descDisplay {
+    font-style: normal;
+    text-transform: capitalize;
+    font-weight: 700;
+    font-size: 1.3rem;
+    color: #475569;
+    margin-bottom: 20px;
+}
+
+.humidityDisplay {
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: #334155;
+    background: #f1f5f9;
+    padding: 8px 18px;
+    border-radius: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 6px;
+}
+
+.additional-info {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    width: 100%;
+    margin-top: 14px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 0.85rem;
+    color: #64748b;
+    font-weight: 600;
+}
+
+.info-item span.val {
+    font-size: 1.1rem;
+    color: #0f172a;
+    font-weight: 700;
+    margin-top: 2px;
+}
+
+.errorDisplay {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #dc2626;
+    padding: 16px;
+    background: #fee2e2;
+    border-radius: var(--radius-md);
+    width: 100%;
+    text-align: center;
+    border: 1px solid #fecaca;
+}
+
+/* Loading Spinner */
+.loader-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 28px;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(12px);
+    border-radius: var(--radius-lg);
+    width: 100%;
+    box-shadow: var(--card-shadow);
+    margin-bottom: 24px;
+}
+
+.spinner {
+    width: 44px;
+    height: 44px;
+    border: 4px solid #e2e8f0;
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+.loader-text {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #64748b;
+}
+
+/* iOS Install Guidance Banner */
+.ios-prompt {
+    width: 100%;
+    background: rgba(15, 23, 42, 0.88);
+    backdrop-filter: blur(12px);
+    color: #ffffff;
+    padding: 14px 18px;
+    border-radius: var(--radius-md);
+    margin-top: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.ios-prompt strong {
+    color: #38bdf8;
+}
+
+.close-ios-btn {
+    background: none;
+    border: none;
+    color: #94a3b8;
     font-size: 1.5rem;
-    margin: 5px 0;
+    cursor: pointer;
+    padding: 0 4px;
+    line-height: 1;
 }
-.cityDisplay, .tempDisplay{
-    font-size: 3.5rem;
-    font-weight: bold;
-    margin-bottom: 25px;
+
+/* Utility Classes */
+.hidden {
+    display: none !important;
 }
-.humidityDisplay{
-    font-weight: bold;
-    margin-bottom: 25px;
+
+/* Animations */
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
-.descDisplay{
-    font-style: italic;
-    font-weight: bold;
-    font-size: 2rem;
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
 }
-.weatherEmoji{
-    margin: 0;
-    font-size: 7.5rem;
+
+@keyframes floatEmoji {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-8px);
+    }
 }
-.errorDisplay{
-    font-size: 2.5rem;
-    font-weight: bold;
-    color: black;
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+
+/* Mobile Adjustments */
+@media (max-width: 480px) {
+    .app-container {
+        padding: 12px 16px 24px;
+    }
+
+    .brand-title {
+        font-size: 1.15rem;
+    }
+
+    .cityDisplay {
+        font-size: 1.85rem;
+    }
+
+    .tempDisplay {
+        font-size: 3.2rem;
+    }
+
+    .weatherEmoji {
+        font-size: 4.5rem;
+    }
+
+    .descDisplay {
+        font-size: 1.15rem;
+    }
+
+    .card {
+        padding: 24px 16px;
+    }
 }
